@@ -6,7 +6,7 @@ class Title extends Phaser.Scene {
     preload(){
         // this.load.spritesheet("happyFront", "./assets/spritesheet.png", {frameWidth: 64, frameHeight: 64});
 
-        this.load.atlas("mysprite", "assets/spritesheet.png", "assets/sprites.json");
+        // this.load.atlas("mysprite", "assets/spritesheet.png", "assets/sprites.json");
     }
 
     create(){
@@ -25,7 +25,7 @@ class Title extends Phaser.Scene {
             key: 'happy',
             frameRate: 8,
             // repeat: -1,
-            frames: this.anims.generateFrameNames("mysprite", { 
+            frames: this.anims.generateFrameNames("happy", { 
                 prefix: "happy",
                 // suffix: ".png",
                 start: 1, 
@@ -33,9 +33,12 @@ class Title extends Phaser.Scene {
             repeat: -1
         });
 
-        this.happy = this.add.sprite(300, 360, "mysprite");
+        this.happy = this.add.sprite(300, 360, "happy");
         this.happy.play("happy");
         // this.happy.anims.msPerFrame  = 40;
+
+
+        // this.scene.start('playScene');
 
 
     }
