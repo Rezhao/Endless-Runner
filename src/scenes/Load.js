@@ -7,17 +7,17 @@ class Load extends Phaser.Scene {
         // set load path
         this.load.path = 'assets/';
         // take care of all of our asset loading now
-        this.load.atlas("happy", "spritesheet.png", "sprites.json");
-        this.load.atlas("yellow", "yellow.png", "yellow.json");
+        this.load.atlas("happy", "happy.png", "happy.json");
+        this.load.atlas("yellow", "./yellow/yellow.png", "./yellow/yellow.json");
         this.load.atlas("bricks", "bricks.png", "bricks.json");
 
-        this.load.atlas("purple", "purple.png", "purple.json");
+        this.load.atlas("purple", "./purple/purple.png", "./purple/purple.json");
 
-        this.load.image('yellow-jump', 'yellowJump.png');
-        this.load.image('yellow',"yellow1.png");
+        this.load.image('yellow-jump', './yellow/yellowJump.png');
+        // this.load.image('yellow',"yellow1.png");
         // this.load.image('yellowBrick','purpleBrick.png');
         this.load.image('background','background.png');
-        this.load.image('ybrick', 'y1.png');
+        // this.load.image('ybrick', 'y1.png');
         // this.load.atlas('platformer_atlas', 'kenny_sheet.png', 'kenny_sheet.json');
         // this.load.image('arrowKey', 'arrowKey.png');
         // this.load.image('talltrees', 'talltrees.png');
