@@ -7,6 +7,7 @@ https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a
 
 'use strict';
 
+let cursors;
 const brickSize = 75;
 
 let config = {

@@ -22,21 +22,45 @@ class Play extends Phaser.Scene {
 
         // let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
         
+        this.colors = ['yellow', 'purple'];
+        this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
+
         for(let i = 0; i < game.config.width; i += brickSize) {
-            let groundTile = this.physics.add.sprite(i, game.config.height - brickSize, 'bricks', 'yellowBrick').setOrigin(0);
+            let groundTile = this.physics.add.sprite(i, game.config.height - brickSize, 'bricks', this.randomColor + 'Brick').setOrigin(0);
             // let groundTile = this.physics.add.sprite(i, game.config.height - brickSize, 'ybrick').setOrigin(0);
             groundTile.body.immovable = true;
             groundTile.body.allowGravity = false;
             this.ground.add(groundTile);
         }
 
-        this.player = this.physics.add.sprite(50, game.config.height/2 - brickSize, 'yellow').setScale(0.5);
+        // this.colors = ['yellow', 'purple'];
+        // this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
+
+        this.player = this.physics.add.sprite(75, game.config.height/2 - brickSize, this.randomColor, this.randomColor + '1').setScale(0.5);
         // this.player.body.allowGravity = false;
 
+        this.anims.create({
+            key: 'walk',
+            frameRate: 15,
+            // repeat: -1,
+            frames: this.anims.generateFrameNames(this.randomColor, { 
+                prefix: this.randomColor,
+                // suffix: ".png",
+                start: 1, 
+                end: 6 }),
+            repeat: -1
+        });
+
+
+        cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.collider(this.player, this.ground);
     }
 
     update(){
+
+        //based on position of random object, randomize color at that point
+
+
         this.background.tilePositionX += 2;
 
 
@@ -47,7 +71,19 @@ class Play extends Phaser.Scene {
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } else {
-	    	this.player.anims.play('jump');
+	    	// this.player.anims.play('yellow-jump');
+            this.player.setTexture('yellow-jump'); ////////CHANGE TO VARIABLE LATER
+	    }
+
+        if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
+	        this.player.body.velocity.y = this.JUMP_VELOCITY;
+	        this.jumping = true;
+	        // this.upKey.tint = 0xFACADE;
+	    } 
+
+        if(this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
+	    	this.jumps--;
+	    	this.jumping = false;
 	    }
     }
 }

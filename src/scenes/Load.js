@@ -8,7 +8,12 @@ class Load extends Phaser.Scene {
         this.load.path = 'assets/';
         // take care of all of our asset loading now
         this.load.atlas("happy", "spritesheet.png", "sprites.json");
+        this.load.atlas("yellow", "yellow.png", "yellow.json");
         this.load.atlas("bricks", "bricks.png", "bricks.json");
+
+        this.load.atlas("purple", "purple.png", "purple.json");
+
+        this.load.image('yellow-jump', 'yellowJump.png');
         this.load.image('yellow',"yellow1.png");
         // this.load.image('yellowBrick','purpleBrick.png');
         this.load.image('background','background.png');
