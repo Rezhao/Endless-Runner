@@ -10,8 +10,10 @@ class Load extends Phaser.Scene {
         this.load.atlas("happy", "happy.png", "happy.json");
         this.load.atlas("yellow", "./yellow/yellow.png", "./yellow/yellow.json");
         this.load.atlas("bricks", "bricks.png", "bricks.json");
+        this.load.image("pinkBrick", "./bricks/pinkBrick.png");
 
         this.load.atlas("purple", "./purple/purple.png", "./purple/purple.json");
+        this.load.atlas("pink", "./pink/pink.png", "./pink/pink.json");
 
         this.load.image('yellow-jump', './yellow/yellowJump.png');
         // this.load.image('yellow',"yellow1.png");

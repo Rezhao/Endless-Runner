@@ -8,7 +8,8 @@ https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a
 'use strict';
 
 let cursors;
-const brickSize = 75;
+const brickWidth = 119;
+const brickHeight = 23;
 
 let config = {
     type: Phaser.AUTO,
@@ -17,7 +18,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            // debug: true,
+            debug: true,
             gravity: {
                 x: 0,
                 y: 0
