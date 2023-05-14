@@ -187,6 +187,7 @@ class Play extends Phaser.Scene {
             this.player.anims.play('jump');
 	    }
 
+        //Phaser.Input.Keyboard.JustDown(keyLEFT)
         if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
 	        this.player.body.velocity.y = this.JUMP_VELOCITY;
             // this.sound.play('boing');
