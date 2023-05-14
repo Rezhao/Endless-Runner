@@ -103,27 +103,50 @@ class Play extends Phaser.Scene {
 
         this.boba_v;
         this.bobaCounter = 0;
-        this.isSameColor = false;
+        this.gotBoba = false;
         // this.samePlatform = false;
 
         cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.collider(this.player, this.startGround);
+
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#edcb8f',
+            color: '#866146',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.scoreLeft = this.add.text(10, 10, this.score, scoreConfig);
+
+        this.song = this.sound.add('background_song');
+        this.song.setLoop(true);
+        this.song.play();
     }
 
     update(){
         if(this.outsideBounds()){
+            this.song.stop();
+            // this.scene.restart();
             this.scene.start('gameOverScene');
         }
         // this.outsideBounds();
 
         if(this.physics.overlap(this.player, this.boba)){
+            this.sound.play('sparkle');
             this.switchColor();
+            // this.sound.play('sparkle');
+            // this.gotBoba = true;
         }
 
-        if(localStorage.getItem("score") < this.score){
-            localStorage.setItem("score", this.score);
-            // this.highScore.text = localStorage.getItem("score");
-        }
+        // if(localStorage.getItem("score") < this.score){
+        //     localStorage.setItem("score", this.score);
+        //     // this.highScore.text = localStorage.getItem("score");
+        // }
 
         // if(!this.samePlatform){
         //     this.updateScore();
@@ -160,17 +183,20 @@ class Play extends Phaser.Scene {
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } else {
+            // this.sound.play('boing');
             this.player.anims.play('jump');
 	    }
 
         if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
 	        this.player.body.velocity.y = this.JUMP_VELOCITY;
+            // this.sound.play('boing');
 	        this.jumping = true;
 	    } 
 
         if(this.jumping && Phaser.Input.Keyboard.UpDuration(cursors.up)) {
 	    	this.jumps--;
 	    	this.jumping = false;
+            this.sound.play('boing');
 	    }
     }
 
@@ -211,14 +237,14 @@ class Play extends Phaser.Scene {
         this.boba.setVelocityX(this.boba_v); 
         this.boba.setImmovable(); 
         this.boba.body.allowGravity = false;
-        this.physics.add.collider(this.boba, this.platformGroup);
+        this.physics.add.collider(this.boba, this.sameColorGroup);
     }
 
     switchColor() {
         this.boba.destroy();
-        console.log('before ' + this.score);
         this.score += 5;
-        console.log('after' + this.score);
+        this.scoreLeft.text = this.score;
+        // this.sound.play('sparkle');
 
         randomColor = Phaser.Utils.Array.GetRandom(this.otherColors);
         this.updateAnimations();
@@ -279,6 +305,7 @@ class Play extends Phaser.Scene {
             if(!this.platformLanded.contains(platform)) {
                 this.platformLanded.add(platform);
                 this.score += 3;
+                this.scoreLeft.text = this.score;
             }
             // this.score += 5;
         });
@@ -288,7 +315,11 @@ class Play extends Phaser.Scene {
             //myGroup.contains(myObject)
             if(!this.platformLanded.contains(platform)) {
                 this.platformLanded.add(platform);
-                this.score -= 1;
+                if(this.score > 0){
+                    this.score -= 1;
+                }
+                // this.score -= 1;
+                this.scoreLeft.text = this.score;
             }
             // this.score += 5;
         });

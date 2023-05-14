@@ -5,10 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="preload" as="font" href="assets/fonts/BubbleBobble.ttf" type="font/ttf" crossorigin="anonymous"/>
+    <link rel="preload" as="font" href="assets/fonts/DoublebubbleShadow.ttf" type="font/ttf" crossorigin="anonymous"/>
+    <link rel="preload" as="font" href="assets/fonts/LovelyViewsRegular.ttf" type="font/ttf" crossorigin="anonymous"/>
+    <link rel="preload" as="font" href="assets/fonts/SimpleKindOfGirl.ttf" type="font/ttf" crossorigin="anonymous"/>
+    <link rel="preload" as="font" href="assets/fonts/SuperSimpleBrushScript.ttf" type="font/ttf" crossorigin="anonymous"/>
+
     <title>Endless Runner</title>
     <script src="./lib/phaser.js"></script>
     <script src="./src/scenes/Load.js"></script>
     <script src="./src/scenes/Title.js"></script>
+    <script src="./src/scenes/Rules.js"></script>
     <script src="./src/scenes/Play.js"></script>
     <script src="./src/scenes/GameOver.js"></script>
     <script src="./src/prefabs/Platform.js"></script>
@@ -27,6 +34,27 @@
             /* background-color: beige */
             height: 100vh;
             background-image: linear-gradient(#b8e5ff, #ffb8d4);
+        }
+
+        @font-face {
+            font-family: bubbleBobble;
+            src: url('./assets/fonts/BubbleBobble.ttf');
+        }
+        @font-face {
+            font-family: doubleBubble;
+            src: url('./assets/fonts/DoublebubbleShadow.ttf');
+        }
+        @font-face {
+            font-family: lovelyViewsRegular;
+            src: url('./assets/fonts/LovelyViewsRegular.ttf');
+        }
+        @font-face {
+            font-family: simpleKindOfGirl;
+            src: url('./assets/fonts/SimpleKindOfGirl.ttf');
+        }
+        @font-face {
+            font-family: superSimpleBrushScript;
+            src: url('./assets/fonts/SuperSimpleBrushScript.ttf');
         }
     </style>
 </head>
