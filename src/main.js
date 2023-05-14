@@ -25,11 +25,11 @@ let config = {
             }
         }
     },
-    scene: [Load, Title, Play],
+    scene: [Load, Title, Play, GameOver],
 }
 
 let game = new Phaser.Game(config);
 
 let centerX = game.config.width/2;
-let randomColor;
 let colors = ['yellow', 'purple', 'pink', 'green', 'orange', 'red', 'blue'];
+let randomColor = Phaser.Utils.Array.GetRandom(colors);

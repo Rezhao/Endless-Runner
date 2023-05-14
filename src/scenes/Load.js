@@ -32,6 +32,7 @@ class Load extends Phaser.Scene {
         // this.load.image('yellow',"yellow1.png");
         // this.load.image('yellowBrick','purpleBrick.png');
         this.load.image('background','background.png');
+        this.load.image('boba','boba.png');
         // this.load.image('ybrick', 'y1.png');
         // this.load.atlas('platformer_atlas', 'kenny_sheet.png', 'kenny_sheet.json');
         // this.load.image('arrowKey', 'arrowKey.png');

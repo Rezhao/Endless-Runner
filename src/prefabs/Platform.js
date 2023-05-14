@@ -1,3 +1,6 @@
+//ADD CONDITION RESTRAINT OF MUST HOP ON SPECIFIC COLOR
+
+
 class Platform extends Phaser.Physics.Arcade.Sprite{
     constructor(scene, velocity, color) {
         // call Phaser Physics Sprite constructor
@@ -14,6 +17,11 @@ class Platform extends Phaser.Physics.Arcade.Sprite{
         this.newPlatform = true;                 // custom property to control barrier spawning
 
         this.body.allowGravity = false;
+        this.c = color;
+
+        this.body.checkCollision.down = false;
+        this.body.checkCollision.left = false;
+        this.body.checkCollision.right = false;
     }
 
     update() {
@@ -29,4 +37,13 @@ class Platform extends Phaser.Physics.Arcade.Sprite{
             this.destroy();
         }
     }
+
+    getColor() {
+        return this.c;
+    }
+
+    // setColor(c) {
+    //     console.log(c + 'Brick');
+    //     this.setTexture(c + 'Brick');
+    // }
 }
