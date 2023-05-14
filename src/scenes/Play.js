@@ -8,10 +8,15 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.ACCELERATION = 500;
+        this.MAX_X_VEL = 500;   // pixels/second
+        this.MAX_Y_VEL = 5000;
+        this.DRAG = 600; 
         this.JUMP_VELOCITY = -700;
         this.MAX_JUMPS = 3;
         this.SCROLL_SPEED = 4;
         this.physics.world.gravity.y = 3000;
+        this.platformSpeed = -200;
 
         // this.cameras.main.setBackgroundColor('#000000');
 
@@ -22,79 +27,118 @@ class Play extends Phaser.Scene {
 
         // let groundTile = this.physics.add.sprite(i, game.config.height - tileSize, 'platformer_atlas', 'block').setScale(SCALE).setOrigin(0);
         
-        this.colors = ['yellow', 'purple', 'pink'];
-        this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
+        // this.colors = ['yellow', 'purple', 'pink', 'green', 'orange', 'red', 'blue'];
+        randomColor = Phaser.Utils.Array.GetRandom(colors);
 
         for(let i = 0; i < game.config.width; i += brickWidth) {
-            this.groundScroll = this.add.tileSprite(i, game.config.height - brickHeight, brickWidth, brickHeight, 'bricks', this.randomColor + 'Brick').setOrigin(0);
+            this.groundScroll = this.add.tileSprite(i, game.config.height - brickHeight, brickWidth, brickHeight, 'bricks', randomColor + 'Brick').setOrigin(0);
             this.physics.add.existing(this.groundScroll);  
-            this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
+            // randomColor = Phaser.Utils.Array.GetRandom(this.colors);
             // let groundTile = this.physics.add.sprite(i, game.config.height - brickSize, 'ybrick').setOrigin(0);
             this.groundScroll.body.immovable = true;
             this.groundScroll.body.allowGravity = false;
             this.ground.add(this.groundScroll);
         }
 
-        this.barrierGroup = this.add.group({
+        // this.path = this.add.group({
+        //     runChildUpdate: true 
+        // });
+
+        this.otherColors = colors
+        Phaser.Utils.Array.Remove(this.otherColors, randomColor);
+
+        this.isColor = true;
+        this.platformGroup = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
 
-        this.time.delayedCall(2500, () => { 
-            this.addBarrier(); 
+        this.time.delayedCall(1000, () => { 
+            this.addPlatform(); 
         });
 
-        // var tileSprite = this.add.tileSprite(x, y, width, height, image);
-        // this.physics.add.existing(tileSprite);  
 
-        // this.blockLeftCap = this.physics.add.tileSprite(100,100,44,43,'button-001');
-
-
+        this.testGround = this.physics.add.sprite(-10, game.config.height/2, randomColor + 'Brick').setOrigin(0);
+        this.testGround.body.immovable = true;
+        this.testGround.body.allowGravity = false;
 
 
-        // this.groundScroll = this.add.tileSprite(0, game.config.height-brickSize, game.config.width, brickSize, 'bricks', this.randomColor + 'Brick').setOrigin(0);
-        // this.groundScroll = this.add.tileSprite(0, game.config.height-brickSize, game.config.width, brickSize, 'bricks', this.randomColor + 'Brick').setOrigin(0);
-
-        // this.colors = ['yellow', 'purple'];
-        // this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
-
-        this.player = this.physics.add.sprite(75, game.config.height/2 - brickHeight, this.randomColor, this.randomColor + '1').setScale(0.5);
+        this.player = this.physics.add.sprite(75, game.config.height/2 - 30, randomColor, randomColor + '1').setScale(0.5);
+        // this.player.setCollideWorldBounds(true);
+        this.player .body.checkCollision.up = false;
+        this.player .body.checkCollision.left = false;
+        this.player .body.checkCollision.right = false;
         // this.player.body.allowGravity = false;
 
         this.anims.create({
             key: 'walk',
             frameRate: 15,
             // repeat: -1,
-            frames: this.anims.generateFrameNames(this.randomColor, { 
-                prefix: this.randomColor,
+            frames: this.anims.generateFrameNames(randomColor, { 
+                prefix: randomColor,
                 // suffix: ".png",
                 start: 1, 
                 end: 6 }),
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'idle',
+            defaultTextureKey: randomColor,
+            frames: [
+                { frame: randomColor + '1' }
+            ],
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'jump',
+            defaultTextureKey: 'jump',
+            frames: [
+                { frame: randomColor + 'Jump' }
+            ],
+            repeat: -1
+        });
+
+
 
         cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.collider(this.player, this.ground);
+        this.physics.add.collider(this.player, this.testGround);
     }
 
     update(){
 
         //based on position of random object, randomize color at that point
-
+        this.physics.add.collider(this.player, this.platformGroup);
 
         this.background.tilePositionX += 2;
         this.ground.tilePositionX += 2;
+
+        if(cursors.left.isDown) {
+            this.player.body.setAccelerationX(-this.ACCELERATION);
+            this.player.setFlip(true, false);
+            this.player.anims.play('walk', true);
+        } else if(cursors.right.isDown) {
+            this.player.body.setAccelerationX(this.ACCELERATION);
+            this.player.resetFlip();
+            this.player.anims.play('walk', true);
+        } else {
+            // set acceleration to 0 so DRAG will take over
+            this.player.body.setAccelerationX(0);
+            this.player.body.setDragX(this.DRAG);
+            this.player.anims.play('idle');
+        }
+
 
 
         this.player.onGround = this.player.body.touching.down;
 	    // if so, we have jumps to spare
 	    if(this.player.onGround) {
-            this.player.anims.play('walk', true);
+            // this.player.anims.play('walk', true);
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } else {
-	    	// this.player.anims.play('yellow-jump');
-            this.player.setTexture('yellow-jump'); ////////CHANGE TO VARIABLE LATER
+            this.player.anims.play('jump');
 	    }
 
         if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
@@ -109,32 +153,19 @@ class Play extends Phaser.Scene {
 	    }
     }
 
-
-    updateBricks() {
-        this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
-        this.groundScroll = this.add.tileSprite(game.config.width, game.config.height - brickHeight, brickWidth, brickHeight, 'bricks', this.randomColor + 'Brick').setOrigin(0);
-        this.physics.add.existing(this.groundScroll);  
-
-        this.groundScroll.body.immovable = true;
-        this.groundScroll.body.allowGravity = false;
-        this.ground.add(this.groundScroll);
-        
-        // for(let i = 0; i < game.config.width; i += brickSize) {
-        //     this.groundScroll = this.add.tileSprite(i, game.config.height - brickSize, brickSize, brickSize, 'bricks', this.randomColor + 'Brick').setOrigin(0);
-        //     this.physics.add.existing(this.groundScroll);  
-        //     this.randomColor = Phaser.Utils.Array.GetRandom(this.colors);
-        //     // let groundTile = this.physics.add.sprite(i, game.config.height - brickSize, 'ybrick').setOrigin(0);
-        //     this.groundScroll.body.immovable = true;
-        //     this.groundScroll.body.allowGravity = false;
-        //     this.ground.add(this.groundScroll);
-        // }
-    }
-
-
-    addBarrier() {
+    addPlatform() {
         let speedVariance =  Phaser.Math.Between(0, 50);
-        // let barrier = new Barrier(this, this.barrierSpeed - speedVariance);
-        let barrier = new Platform(this, -450 - speedVariance);
-        this.barrierGroup.add(barrier);
+
+        if(this.isColor) {
+            let platform = new Platform(this, this.platformSpeed - speedVariance, randomColor);
+            this.platformGroup.add(platform);
+            this.isColor = false;
+        } else{
+            // let color = Phaser.Utils.Array.GetRandom(this.otherColors);
+            let platform = new Platform(this, this.platformSpeed - speedVariance, Phaser.Utils.Array.GetRandom(this.otherColors));
+            this.platformGroup.add(platform);
+            this.isColor = true;
+        }
+
     }
 }

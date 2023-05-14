@@ -8,7 +8,7 @@ https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a
 'use strict';
 
 let cursors;
-const brickWidth = 119;
+const brickWidth = 193;
 const brickHeight = 23;
 
 let config = {
@@ -29,3 +29,7 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
+
+let centerX = game.config.width/2;
+let randomColor;
+let colors = ['yellow', 'purple', 'pink', 'green', 'orange', 'red', 'blue'];
