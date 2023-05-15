@@ -39,7 +39,8 @@ class Load extends Phaser.Scene {
         this.load.audio('boing', './sounds/cartoon-jump.mp3');
         this.load.audio('sparkle', './sounds/twinklesparkle.mp3');
         this.load.audio('powerup', './sounds/powerup.mp3');
-        this.load.audio('background_song', './sounds/chiptune-grooving.mp3');
+        // this.load.audio('blob-music', './sounds/chiptune-grooving.mp3'); 
+        // this.load.audio('song', './sounds/chiptune-grooving.mp3');
     }
 
     create() {

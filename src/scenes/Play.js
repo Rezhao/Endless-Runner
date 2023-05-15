@@ -4,10 +4,17 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-        
+        // load in game background music
+        this.load.audio('blob-music', './assets/sounds/chiptune-grooving.mp3'); 
     }
 
     create() {
+        // this.sound.add('song', { loop: true }).play();
+        // this.song = this.sound.add('song');
+        // this.song.setLoop(true);
+        // this.song.play();
+
+
         this.ACCELERATION = 600;
         // this.MAX_X_VEL = 500;   // pixels/second
         // this.MAX_Y_VEL = 5000;
@@ -18,6 +25,23 @@ class Play extends Phaser.Scene {
         this.physics.world.gravity.y = 3000;
         this.platformSpeed = -200;
         this.platformSpeedMax = -700;
+
+        // set music configurations
+        let blobBackgroundMusicConfig = {
+            mute: false, // make sure music plays
+            volume: 1, // at least 0.5 to hear sound
+            loop: true, // play music forever
+            rate: 1, // play music at a rate of 1
+            delay: 0 // don't delay, play music immediately
+        };
+
+        // set background game music
+        this.blobBackgroundMusic = this.sound.add('blob-music', blobBackgroundMusicConfig);
+        this.blobBackgroundMusic.play(blobBackgroundMusicConfig); // play background music based on configurations
+
+        // debugging statements
+        console.log("MUSICCCCCCC PLAYYYYYYYYING");
+        console.log(this.blobBackgroundMusic);
 
         // this.cameras.main.setBackgroundColor('#000000');
 
@@ -123,14 +147,14 @@ class Play extends Phaser.Scene {
         }
         this.scoreLeft = this.add.text(10, 10, this.score, scoreConfig);
 
-        this.song = this.sound.add('background_song');
-        this.song.setLoop(true);
-        this.song.play();
+        // this.song = this.sound.add('song');
+        // this.song.setLoop(true);
+        // this.song.play();
     }
 
     update(){
         if(this.outsideBounds()){
-            this.song.stop();
+            this.blobBackgroundMusic.stop();
             // this.scene.restart();
             this.scene.start('gameOverScene');
         }
