@@ -187,7 +187,7 @@ class Play extends Phaser.Scene {
         // console.log(localStorage.setItem("score", 0));
         if(localStorage.getItem("score") < this.score){
             localStorage.setItem("score", this.score);
-            console.log(localStorage.getItem("score"));
+            // console.log(localStorage.getItem("score"));
             this.highScore.text = localStorage.getItem("score");
         }
 
@@ -372,7 +372,7 @@ class Play extends Phaser.Scene {
     outsideBounds() {
         //this.player.x < 0 || 
         //this.player.x > game.config.width || 
-        if(this.player.y > game.config.height){
+        if(this.player.y > game.config.height + 130){
                 // console.log('x is ' + this.player.x);
                 // console.log('y is ' + this.player.y);
                 this.jumps = -1;
@@ -383,5 +383,4 @@ class Play extends Phaser.Scene {
             return false;
         }
     }
-
 }
