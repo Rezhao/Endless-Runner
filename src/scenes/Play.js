@@ -4,10 +4,10 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
+        //setting a load path
         this.load.path = 'assets/';
-        // load in game background music
-        this.load.audio('blob-music', './sounds/chiptune-grooving.mp3'); 
 
+        //load in bricks
         this.load.image("pinkBrick", "./bricks/pinkBrick.png");
         this.load.image("yellowBrick", "./bricks/yellowBrick.png");
         this.load.image("purpleBrick", "./bricks/purpleBrick.png");
@@ -16,6 +16,7 @@ class Play extends Phaser.Scene {
         this.load.image("orangeBrick", "./bricks/orangeBrick.png");
         this.load.image("redBrick", "./bricks/redBrick.png");
 
+        //load each atlas for player animations
         this.load.atlas("yellow", "./yellow/yellow.png", "./yellow/yellow.json");
         this.load.atlas("purple", "./purple/purple.png", "./purple/purple.json");
         this.load.atlas("pink", "./pink/pink.png", "./pink/pink.json");
@@ -24,22 +25,27 @@ class Play extends Phaser.Scene {
         this.load.atlas("red", "./red/red.png", "./red/red.json");
         this.load.atlas("blue", "./blue/blue.png", "./blue/blue.json");
 
+        //load player jump frames
         this.load.atlas("jump", "./jump/jump.png", "./jump/jump.json");
 
+        //loading background
         this.load.image('background','background.png');
+
+        //loading boba powerup
         this.load.image('boba','boba.png');
-        // this.load.image('title','titleBackground.png');
-        // this.load.image('rules','rulesBackground.png');
         
+        //loading audio sound effects
         this.load.audio('boing', './sounds/cartoon-jump.mp3');
         this.load.audio('sparkle', './sounds/twinklesparkle.mp3');
         this.load.audio('powerup', './sounds/powerup.mp3');
+
+        // load in game background music
+        this.load.audio('blob-music', './sounds/chiptune-grooving.mp3'); 
     }
 
     create() {
+        //setting variables to track speed of platforms and jump/walk speed
         this.ACCELERATION = 600;
-        // this.MAX_X_VEL = 500;   // pixels/second
-        // this.MAX_Y_VEL = 5000;
         this.DRAG = 700; 
         this.JUMP_VELOCITY = -700;
         this.MAX_JUMPS = 3;
@@ -50,35 +56,44 @@ class Play extends Phaser.Scene {
 
         // set music configurations
         let blobBackgroundMusicConfig = {
-            mute: false, // make sure music plays
-            volume: 1, // at least 0.5 to hear sound
-            loop: true, // play music forever
-            rate: 1, // play music at a rate of 1
-            delay: 0 // don't delay, play music immediately
+            mute: false,
+            volume: 1, 
+            loop: true, //looping music so it is never ending
+            rate: 1,
+            delay: 0 
         };
 
         // set background game music
         this.blobBackgroundMusic = this.sound.add('blob-music', blobBackgroundMusicConfig);
         this.blobBackgroundMusic.play(blobBackgroundMusicConfig); // play background music based on configurations
 
+        //adding background tile
         this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0);
 
+        //creating copy of colors array and removing the current color of the player 
+        //use this to create interference platforms and pick a new color when player switches color
         this.otherColors = [...colors]
         Phaser.Utils.Array.Remove(this.otherColors, randomColor);
 
+        //boolean to set every other platform to the same color as the player
         this.isColor = true;
+
+        //keeps track of other colored platforms (different from player color)
         this.platformGroup = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
 
+        //keeps track of same colored platforms (same color as player)
         this.sameColorGroup = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
 
+        //keeps track of which platforms player has already landed on so we don't add points multiple times
         this.platformLanded = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
 
+        //delay 
         this.time.delayedCall(1000, () => { 
             this.addPlatform(); 
         });
@@ -103,10 +118,8 @@ class Play extends Phaser.Scene {
         this.walk = this.anims.create({
             key: 'walk',
             frameRate: 15,
-            // repeat: -1,
             frames: this.anims.generateFrameNames(randomColor, { 
                 prefix: randomColor,
-                // suffix: ".png",
                 start: 1, 
                 end: 6 }),
             repeat: -1
@@ -173,35 +186,22 @@ class Play extends Phaser.Scene {
     update(){
         if(this.outsideBounds()){
             this.blobBackgroundMusic.stop();
-            // this.gameOver();
-            // this.sound.play('ending');
             this.time.delayedCall(1000, () => { this.scene.start('gameOverScene'); });
         }
 
         if(this.physics.overlap(this.player, this.boba)){
             this.sound.play('sparkle');
             this.switchColor();
-            // this.sound.play('sparkle');
-            // this.gotBoba = true;
         }
-        // console.log(localStorage.setItem("score", 0));
+
         if(localStorage.getItem("score") < this.score){
             localStorage.setItem("score", this.score);
-            // console.log(localStorage.getItem("score"));
             this.highScore.text = localStorage.getItem("score");
         }
 
-        // if(!this.samePlatform){
-        //     this.updateScore();
-        // }
-
         this.updateScore();
-    
-        // this.physics.add.collider(this.player, this.sameColorGroup);
-        // this.physics.add.collider(this.player, this.platformGroup);
 
         this.background.tilePositionX += 2;
-        // this.ground.tilePositionX += 2;
 
         if(cursors.left.isDown) {
             this.player.body.setAccelerationX(-this.ACCELERATION);
@@ -221,19 +221,16 @@ class Play extends Phaser.Scene {
 
 
         this.player.onGround = this.player.body.touching.down;
-	    // if so, we have jumps to spare
+
 	    if(this.player.onGround) {
 	    	this.jumps = this.MAX_JUMPS;
 	    	this.jumping = false;
 	    } else {
-            // this.sound.play('boing');
             this.player.anims.play('jump');
 	    }
 
-        //Phaser.Input.Keyboard.JustDown(keyLEFT)
         if(this.jumps > 0 && Phaser.Input.Keyboard.DownDuration(cursors.up, 150)) {
 	        this.player.body.velocity.y = this.JUMP_VELOCITY;
-            // this.sound.play('boing');
 	        this.jumping = true;
 	    } 
 
@@ -249,7 +246,6 @@ class Play extends Phaser.Scene {
 
         if(this.isColor) {
             this.platform = new Platform(this, this.platformSpeed - speedVariance, randomColor);
-            // this.platformGroup.add(this.platform);
             this.sameColorGroup.add(this.platform);
             this.isColor = false;
             this.boba_v = this.platformSpeed - speedVariance;
@@ -288,7 +284,6 @@ class Play extends Phaser.Scene {
         this.boba.destroy();
         this.score += 5;
         this.scoreLeft.text = this.score;
-        // this.sound.play('sparkle');
 
         randomColor = Phaser.Utils.Array.GetRandom(this.otherColors);
         this.updateAnimations();
@@ -313,10 +308,8 @@ class Play extends Phaser.Scene {
         this.walk = this.anims.create({
             key: 'walk',
             frameRate: 15,
-            // repeat: -1,
             frames: this.anims.generateFrameNames(randomColor, { 
                 prefix: randomColor,
-                // suffix: ".png",
                 start: 1, 
                 end: 6 }),
             repeat: -1
@@ -344,41 +337,29 @@ class Play extends Phaser.Scene {
 
     updateScore() {
         this.physics.add.collider(this.player, this.sameColorGroup, (player, platform) =>{
-            // console.log(this.score);
-            //myGroup.contains(myObject)
             if(!this.platformLanded.contains(platform)) {
                 this.platformLanded.add(platform);
                 this.score += 3;
                 this.scoreLeft.text = this.score;
             }
-            // this.score += 5;
         });
 
         this.physics.add.collider(this.player, this.platformGroup, (player, platform) =>{
-            // console.log(this.score);
-            //myGroup.contains(myObject)
             if(!this.platformLanded.contains(platform)) {
                 this.platformLanded.add(platform);
                 if(this.score > 0){
                     this.score -= 1;
                 }
-                // this.score -= 1;
                 this.scoreLeft.text = this.score;
             }
-            // this.score += 5;
         });
     }
 
     outsideBounds() {
-        //this.player.x < 0 || 
-        //this.player.x > game.config.width || 
         if(this.player.y > game.config.height + 130){
-                // console.log('x is ' + this.player.x);
-                // console.log('y is ' + this.player.y);
                 this.jumps = -1;
 	    	    this.jumping = false;
                 return true;
-                // return true;
         } else{
             return false;
         }
