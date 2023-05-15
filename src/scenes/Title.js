@@ -7,6 +7,11 @@ class Title extends Phaser.Scene {
         // this.load.spritesheet("happyFront", "./assets/spritesheet.png", {frameWidth: 64, frameHeight: 64});
 
         // this.load.atlas("mysprite", "assets/spritesheet.png", "assets/sprites.json");
+
+        this.load.path = 'assets/';
+
+        this.load.atlas("happy", "happy.png", "happy.json");
+        this.load.image('title','titleBackground.png');
     }
 
     create(){
@@ -83,7 +88,7 @@ class Title extends Phaser.Scene {
             // fixedWidth: 0
         }
 
-        this.add.text(game.config.width/2 + 130, game.config.height - 50, "* Click on start to play!", textConfig);
+        this.add.text(game.config.width/2 + 120, game.config.height - 50, "* Click on start to begin!", textConfig);
 
 
         // this.happy.anims.msPerFrame  = 40;

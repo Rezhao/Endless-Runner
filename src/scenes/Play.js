@@ -4,17 +4,39 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
+        this.load.path = 'assets/';
         // load in game background music
-        this.load.audio('blob-music', './assets/sounds/chiptune-grooving.mp3'); 
+        this.load.audio('blob-music', './sounds/chiptune-grooving.mp3'); 
+
+        this.load.image("pinkBrick", "./bricks/pinkBrick.png");
+        this.load.image("yellowBrick", "./bricks/yellowBrick.png");
+        this.load.image("purpleBrick", "./bricks/purpleBrick.png");
+        this.load.image("greenBrick", "./bricks/greenBrick.png");
+        this.load.image("blueBrick", "./bricks/blueBrick.png");
+        this.load.image("orangeBrick", "./bricks/orangeBrick.png");
+        this.load.image("redBrick", "./bricks/redBrick.png");
+
+        this.load.atlas("yellow", "./yellow/yellow.png", "./yellow/yellow.json");
+        this.load.atlas("purple", "./purple/purple.png", "./purple/purple.json");
+        this.load.atlas("pink", "./pink/pink.png", "./pink/pink.json");
+        this.load.atlas("green", "./green/green.png", "./green/green.json");
+        this.load.atlas("orange", "./orange/orange.png", "./orange/orange.json");
+        this.load.atlas("red", "./red/red.png", "./red/red.json");
+        this.load.atlas("blue", "./blue/blue.png", "./blue/blue.json");
+
+        this.load.atlas("jump", "./jump/jump.png", "./jump/jump.json");
+
+        this.load.image('background','background.png');
+        this.load.image('boba','boba.png');
+        // this.load.image('title','titleBackground.png');
+        // this.load.image('rules','rulesBackground.png');
+        
+        this.load.audio('boing', './sounds/cartoon-jump.mp3');
+        this.load.audio('sparkle', './sounds/twinklesparkle.mp3');
+        this.load.audio('powerup', './sounds/powerup.mp3');
     }
 
     create() {
-        // this.sound.add('song', { loop: true }).play();
-        // this.song = this.sound.add('song');
-        // this.song.setLoop(true);
-        // this.song.play();
-
-
         this.ACCELERATION = 600;
         // this.MAX_X_VEL = 500;   // pixels/second
         // this.MAX_Y_VEL = 5000;
@@ -38,12 +60,6 @@ class Play extends Phaser.Scene {
         // set background game music
         this.blobBackgroundMusic = this.sound.add('blob-music', blobBackgroundMusicConfig);
         this.blobBackgroundMusic.play(blobBackgroundMusicConfig); // play background music based on configurations
-
-        // debugging statements
-        console.log("MUSICCCCCCC PLAYYYYYYYYING");
-        console.log(this.blobBackgroundMusic);
-
-        // this.cameras.main.setBackgroundColor('#000000');
 
         this.background = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'background').setOrigin(0);
 
@@ -78,11 +94,9 @@ class Play extends Phaser.Scene {
 
 
         this.player = this.physics.add.sprite(75, game.config.height/2 - 30, randomColor, randomColor + '1').setScale(0.5);
-        // this.player.setCollideWorldBounds(true);
         this.player.body.checkCollision.up = false;
         this.player.body.checkCollision.left = false;
         this.player.body.checkCollision.right = false;
-        // this.player.body.allowGravity = false;
 
         this.score = 0;
 
@@ -128,7 +142,6 @@ class Play extends Phaser.Scene {
         this.boba_v;
         this.bobaCounter = 0;
         this.gotBoba = false;
-        // this.samePlatform = false;
 
         cursors = this.input.keyboard.createCursorKeys();
         this.physics.add.collider(this.player, this.startGround);
@@ -146,19 +159,22 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(10, 10, this.score, scoreConfig);
+        this.add.rectangle(game.config.width - 315, 10, 305, 40, 0xedcb8f).setOrigin(0, 0);
+        scoreConfig.fixedWidth = 0;
+        this.highScore = this.add.text(game.config.width - 70, 10, localStorage.getItem("score"), scoreConfig);
+        this.add.text(game.config.width - 300, 10, "High Score: ", scoreConfig);
 
-        // this.song = this.sound.add('song');
-        // this.song.setLoop(true);
-        // this.song.play();
+
+        this.textPainted = false;
+
     }
 
     update(){
         if(this.outsideBounds()){
             this.blobBackgroundMusic.stop();
-            // this.scene.restart();
-            this.scene.start('gameOverScene');
+            // this.gameOver();
+            this.time.delayedCall(1000, () => { this.scene.start('gameOverScene'); });
         }
-        // this.outsideBounds();
 
         if(this.physics.overlap(this.player, this.boba)){
             this.sound.play('sparkle');
@@ -166,11 +182,12 @@ class Play extends Phaser.Scene {
             // this.sound.play('sparkle');
             // this.gotBoba = true;
         }
-
-        // if(localStorage.getItem("score") < this.score){
-        //     localStorage.setItem("score", this.score);
-        //     // this.highScore.text = localStorage.getItem("score");
-        // }
+        // console.log(localStorage.setItem("score", 0));
+        if(localStorage.getItem("score") < this.score){
+            localStorage.setItem("score", this.score);
+            console.log(localStorage.getItem("score"));
+            this.highScore.text = localStorage.getItem("score");
+        }
 
         // if(!this.samePlatform){
         //     this.updateScore();
@@ -351,15 +368,71 @@ class Play extends Phaser.Scene {
     }
 
     outsideBounds() {
-        if(this.player.x < 0 || 
-            this.player.x > game.config.width || 
-            this.player.y > game.config.height){
+        //this.player.x < 0 || 
+        //this.player.x > game.config.width || 
+        if(this.player.y > game.config.height){
                 // console.log('x is ' + this.player.x);
                 // console.log('y is ' + this.player.y);
                 return true;
+                // return true;
         } else{
             return false;
         }
+    }
+
+    gameOver() {
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#edcb8f',
+            color: '#866146',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            }
+            // fixedWidth: 100
+        }
+
+        // this.add.text(game.config.width/2, game.config.height/2, "GAME OVER", scoreConfig).setOrigin(0.5);
+
+        let playConfig = {
+            fontFamily: 'doubleBubble',
+            fontSize: '60px',
+            // fontStyle: 'bold',
+            color: '#ffffff',
+            // align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            // fixedWidth: 0
+        }
+
+        if(!this.textPainted){
+            this.add.text(game.config.width/2, game.config.height/2, "GAME OVER", scoreConfig).setOrigin(0.5);
+            this.playAgain = this.add.text(game.config.width/2, game.config.height/2 + 64, 'Play Again', playConfig).setOrigin(0.5);
+            this.playAgain.setInteractive();
+            this.textPainted = true;
+        }
+        // this.playAgain = this.add.text(game.config.width/2, game.config.height/2 + 64, 'Play Again', playConfig).setOrigin(0.5);
+        // this.playAgain.setInteractive();
+
+        this.playAgain.on('pointerover', () => {
+            this.playAgain.setTint(0xff2b87); 
+        });
+        
+        // Set the tint color back to normal when the mouse leaves the button
+        this.playAgain.on('pointerout', () => {
+            this.playAgain.clearTint();
+        });
+        
+        // Add a click event listener to the button
+        this.playAgain.on('pointerdown', () => {
+            // console.log('Button clicked!');
+            this.scene.restart('playScene');
+
+        });
     }
 }
 

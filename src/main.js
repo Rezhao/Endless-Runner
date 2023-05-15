@@ -2,6 +2,12 @@
 https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a 
 
 https://pixabay.com/sound-effects/search/sparkle/ 
+
+https://www.fontspace.com/search?q=bubble
+
+https://www.leshylabs.com/apps/sstool/
+
+
 */
 
 
@@ -25,7 +31,7 @@ let config = {
             }
         }
     },
-    scene: [Load, Title, Rules, Play, GameOver],
+    scene: [Title, Rules, Play, GameOver],
 }
 
 let game = new Phaser.Game(config);

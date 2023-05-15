@@ -3,6 +3,11 @@ class Rules extends Phaser.Scene {
         super("rulesScene");
     }
 
+    preload() {
+        this.load.path = 'assets/';
+        this.load.image('rules','rulesBackground.png');
+    }
+
     create() {
         this.ruleScreen = this.add.tileSprite(0, 0, game.config.width, game.config.height,'rules').setOrigin(0, 0);
 
