@@ -10,6 +10,10 @@ CREATIVE TILT:
     
     Visual: I drew out all the artwork from scratch and made each frame for the animations so I'm really proud of how they turned out.
 
+
+****** SIDE NOTE: For some reason, sometimes the up arrow key to jump is not being detected. If it isn't, I usually click away to some other tab 
+                    and then go back to the game. It should work as expected after that.
+
 */
 
 
