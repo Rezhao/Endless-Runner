@@ -147,7 +147,7 @@ class Play extends Phaser.Scene {
         this.physics.add.collider(this.player, this.startGround);
 
         let scoreConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'simpleKindOfGirl',
             fontSize: '28px',
             backgroundColor: '#edcb8f',
             color: '#866146',
@@ -155,14 +155,15 @@ class Play extends Phaser.Scene {
             padding: {
                 top: 5,
                 bottom: 5,
+                right: 5,
             },
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(10, 10, this.score, scoreConfig);
-        this.add.rectangle(game.config.width - 315, 10, 305, 40, 0xedcb8f).setOrigin(0, 0);
+        this.add.rectangle(game.config.width - 260, 10, 250, 40, 0xedcb8f).setOrigin(0, 0);
         scoreConfig.fixedWidth = 0;
         this.highScore = this.add.text(game.config.width - 70, 10, localStorage.getItem("score"), scoreConfig);
-        this.add.text(game.config.width - 300, 10, "High Score: ", scoreConfig);
+        this.add.text(game.config.width - 250, 10, "High Score: ", scoreConfig);
 
 
         this.textPainted = false;
@@ -173,6 +174,7 @@ class Play extends Phaser.Scene {
         if(this.outsideBounds()){
             this.blobBackgroundMusic.stop();
             // this.gameOver();
+            // this.sound.play('ending');
             this.time.delayedCall(1000, () => { this.scene.start('gameOverScene'); });
         }
 
@@ -373,6 +375,8 @@ class Play extends Phaser.Scene {
         if(this.player.y > game.config.height){
                 // console.log('x is ' + this.player.x);
                 // console.log('y is ' + this.player.y);
+                this.jumps = -1;
+	    	    this.jumping = false;
                 return true;
                 // return true;
         } else{
@@ -380,77 +384,4 @@ class Play extends Phaser.Scene {
         }
     }
 
-    gameOver() {
-        let scoreConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#edcb8f',
-            color: '#866146',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            }
-            // fixedWidth: 100
-        }
-
-        // this.add.text(game.config.width/2, game.config.height/2, "GAME OVER", scoreConfig).setOrigin(0.5);
-
-        let playConfig = {
-            fontFamily: 'doubleBubble',
-            fontSize: '60px',
-            // fontStyle: 'bold',
-            color: '#ffffff',
-            // align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            // fixedWidth: 0
-        }
-
-        if(!this.textPainted){
-            this.add.text(game.config.width/2, game.config.height/2, "GAME OVER", scoreConfig).setOrigin(0.5);
-            this.playAgain = this.add.text(game.config.width/2, game.config.height/2 + 64, 'Play Again', playConfig).setOrigin(0.5);
-            this.playAgain.setInteractive();
-            this.textPainted = true;
-        }
-        // this.playAgain = this.add.text(game.config.width/2, game.config.height/2 + 64, 'Play Again', playConfig).setOrigin(0.5);
-        // this.playAgain.setInteractive();
-
-        this.playAgain.on('pointerover', () => {
-            this.playAgain.setTint(0xff2b87); 
-        });
-        
-        // Set the tint color back to normal when the mouse leaves the button
-        this.playAgain.on('pointerout', () => {
-            this.playAgain.clearTint();
-        });
-        
-        // Add a click event listener to the button
-        this.playAgain.on('pointerdown', () => {
-            // console.log('Button clicked!');
-            this.scene.restart('playScene');
-
-        });
-    }
 }
-
-
-
-/*
-TODO:
-
-    // finish score: if can't figure out platform, count boba
-    menu screen
-    rules
-    credits 
-     music
-     edge restrictions/end condition
-     restart button
-     use buttons as technical interesting?
-
-
-
-
-*/

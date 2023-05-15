@@ -12,6 +12,8 @@ class Title extends Phaser.Scene {
 
         this.load.atlas("happy", "happy.png", "happy.json");
         this.load.image('title','titleBackground.png');
+
+        this.load.audio('select', './sounds/select.mp3');
     }
 
     create(){
@@ -90,7 +92,7 @@ class Title extends Phaser.Scene {
 
         this.add.text(game.config.width/2 + 120, game.config.height - 50, "* Click on start to begin!", textConfig);
 
-
+        this.clicked = false;
         // this.happy.anims.msPerFrame  = 40;
 
 
@@ -122,6 +124,11 @@ class Title extends Phaser.Scene {
         // Add a click event listener to the button
         this.start.on('pointerdown', () => {
             // console.log('Button clicked!');
+            if(!this.clicked){
+                this.sound.play('select');
+                this.clicked = true;
+            }
+            // this.sound.play('select');
             this.scene.start('rulesScene');
 
         });

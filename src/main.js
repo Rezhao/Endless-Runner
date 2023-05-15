@@ -1,12 +1,14 @@
 /*
-https://airum82.medium.com/working-with-texture-atlases-in-phaser-3-25c4df9a747a 
-
-https://pixabay.com/sound-effects/search/sparkle/ 
-
-https://www.fontspace.com/search?q=bubble
-
-https://www.leshylabs.com/apps/sstool/
-
+NAME: Rebecca Zhao
+GAME TITLE: Color Blob
+APPROXIMATE HOURS: 30+ hours
+CREATIVE TILT: 
+    Technical: I used tweens to animate the "Game Over" text which took a bit of research to figure out. I'm also proud of how I implemented
+                the bricks, specifically detecting what color it is and making sure there is always a same colored platform the player can 
+                jump on. This was much harder than I expected because I needed to research how to randomize colors, change animations to follow
+                the new player's color, figure out how to use an atlas, and research a bit about groups and how to use them to detect collision.
+    
+    Visual: I drew out all the artwork from scratch and made each frame for the animations so I'm really proud of how they turned out.
 
 */
 
