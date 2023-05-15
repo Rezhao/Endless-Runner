@@ -42,7 +42,7 @@ let config = {
 
 let game = new Phaser.Game(config);
 
-localStorage.setItem("score", 0);
+// localStorage.setItem("score", 0);
 
 let centerX = game.config.width/2;
 let colors = ['yellow', 'purple', 'pink', 'green', 'orange', 'red', 'blue'];
