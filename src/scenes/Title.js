@@ -4,131 +4,106 @@ class Title extends Phaser.Scene {
     }
 
     preload(){
-        // this.load.spritesheet("happyFront", "./assets/spritesheet.png", {frameWidth: 64, frameHeight: 64});
-
-        // this.load.atlas("mysprite", "assets/spritesheet.png", "assets/sprites.json");
-
+        //set load path
         this.load.path = 'assets/';
 
+        //loading happy atlas
         this.load.atlas("happy", "happy.png", "happy.json");
+
+        //loading title background
         this.load.image('title','titleBackground.png');
 
+        //loading audio sound effect for click
         this.load.audio('select', './sounds/select.mp3');
     }
 
     create(){
-        // this.hero = new Hero(this, 200, 150, 'hero', 0, 'down');
-        // this.sprite = this.add.sprite(game.config.width/2, 300, 'mysprite');
-        // this.sprite.animations.add(
-        //     'happy',
-        //     this.animations.generateFrameNames('happy', 1, 4),
-        //     5,
-        //     true
-        // );
-        
-        // this.sprite.animations.play('happy');
+        //adding title background
         this.home = this.add.tileSprite(0, 0, game.config.width, game.config.height,'title').setOrigin(0, 0);
 
+        //setting title configurations
         let titleConfig = {
             fontFamily: 'bubbleBobble',
             fontSize: '120px',
-            // fontStyle: 'bold',
             color: '#00ffe1',
-            // align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            // fixedWidth: 0
         }
 
+        //adding text for title
         var text = this.add.text(game.config.width/2, 150, 'COLOR BLOB', titleConfig).setOrigin(0.5);
-        text.setShadow(4, 4, '#0473d4', 5);
+        text.setShadow(4, 4, '#0473d4', 5); //adding drop shadow for title
 
-
+        //creating happy yellow blob animations
         this.anims.create({
             key: 'happy',
             frameRate: 8,
-            // repeat: -1,
             frames: this.anims.generateFrameNames("happy", { 
                 prefix: "happy",
-                // suffix: ".png",
                 start: 1, 
                 end: 10 }),
             repeat: -1
         });
 
+        //adding happy sprite to screen
         this.happy = this.add.sprite(game.config.width/2, game.config.height - 250, "happy").setScale(1.5);
-        this.happy.play("happy");
+        this.happy.play("happy"); //play the animation
 
+        //setting start text configurations
         let menuConfig = {
             fontFamily: 'doubleBubble',
             fontSize: '60px',
-            // fontStyle: 'bold',
             color: '#ffffff',
-            // align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            // fixedWidth: 0
         }
 
+        //adding start text
         this.start = this.add.text(game.config.width/2, game.config.height - 90, 'START', menuConfig).setOrigin(0.5);
-        this.start.setInteractive();
+        this.start.setInteractive(); //set interactive to detect mouse click
 
+        //side note text configurations
         let textConfig = {
             fontFamily: 'simpleKindOfGirl',
             fontSize: '28px',
-            // fontStyle: 'bold',
             color: '#bababa',
-            // align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            // fixedWidth: 0
         }
 
+        //adding side note text
         this.add.text(game.config.width/2 + 120, game.config.height - 50, "* Click on start to begin!", textConfig);
 
+        //boolean to keep track that sound effect plays once
         this.clicked = false;
-        // this.happy.anims.msPerFrame  = 40;
-
-
-        // this.scene.start('playScene');
-
-        // this.button = this.add.sprite(100, 100, 'button');
-
-        // // Make the button interactive
-        // this.button.setInteractive();
-
-        // // Add a click event listener to the button
-        // this.button.on('pointerdown', () => {
-        //     console.log('Button clicked!');
-        // });
-
-
     }
 
     update(){
+        //if mouse is hovering text
         this.start.on('pointerover', () => {
-            this.start.setTint(0xff2b87); 
+            this.start.setTint(0xff2b87); //set tint
         });
         
-        // Set the tint color back to normal when the mouse leaves the button
+        //if mouse is not hovering text
         this.start.on('pointerout', () => {
-            this.start.clearTint();
+            this.start.clearTint(); //clear tint and revert to original color
         });
         
-        // Add a click event listener to the button
+        //if mouse clicks text
         this.start.on('pointerdown', () => {
-            // console.log('Button clicked!');
+            //if sound hasn't played yet
             if(!this.clicked){
-                this.sound.play('select');
-                this.clicked = true;
+                this.sound.play('select'); //play sound effect
+                this.clicked = true; //set boolean to true
             }
-            // this.sound.play('select');
+
+            //start next scene
             this.scene.start('rulesScene');
 
         });

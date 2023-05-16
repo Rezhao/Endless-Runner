@@ -4,93 +4,95 @@ class GameOver extends Phaser.Scene {
     }
 
     preload() {
+        //loading in path
         this.load.path = 'assets/';
+
+        //loading game over sound effect
         this.load.audio('ending', './sounds/wah-wah.mp3');
     }
 
     create() {
+        //game over configuration for text
         let overConfig = {
             fontFamily: 'bubbleBobble',
             fontSize: '100px',
-            // backgroundColor: '#edcb8f',
             color: '#00ffe1',
             align: 'center',
             padding: {
                 top: 5,
                 bottom: 5,
             }
-            // fixedWidth: 100
         }
 
+        //creating game over text
         var gameOverText = this.add.text(game.config.width/2, game.config.height/2 - 120, "GAME OVER", overConfig).setOrigin(0.5);
-        gameOverText.setShadow(4, 4, '#0473d4', 5);
+        gameOverText.setShadow(4, 4, '#0473d4', 5); //adds drop shadow to text
 
+        //using tween to create shaking text animation
         let shakeTween = this.tweens.add({
-            targets: gameOverText,
-            x: '+=7',  // Adjust the values to control the shake intensity
-            y: '+=7',
-            duration: 100,  // Adjust the duration to control the shake speed
-            // ease: 'Power0',
+            targets: gameOverText, //tween will apply to game over text
+            x: '+=7', // Adjusting x value to control shake intensity
+            y: '+=7', // Adjusting y value to control shake intensity
+            duration: 100, // duration of shake animation/speed
             yoyo: true,
             repeat: -1,
         });
 
+        //using tween to create scale text animation (making text enlarged)
         let scaleTween = this.tweens.add({
-            targets: gameOverText,
-            scaleX: 1.5,  // Adjust the scale values to control the enlargement
-            scaleY: 1.5,
-            duration: 410,  // Adjust the duration to control the scale speed
-            ease: 'Linear',
+            targets: gameOverText, //tween will apply to game over text
+            scaleX: 1.5, //Adjust x scale value to control enlargement
+            scaleY: 1.5, //Adjust y scale value to control enlargement
+            duration: 410, //duration to control the scale speed
+            ease: 'Linear', //move linearly
             yoyo: true,
             repeat: -1
         });
 
+        //set scale tween to last for 3 seconds
         this.time.delayedCall(3000, () => {
-            // shakeTween.stop();
             scaleTween.stop();
         }, [], this);
+
+        //set shake tween to last for 5 seconds
         this.time.delayedCall(5000, () => {
             shakeTween.stop();
-            // gameOverText.setScale(1);
-            // scaleTween.stop();
         }, [], this);
 
+        //text configuration for play again
         let playConfig = {
             fontFamily: 'doubleBubble',
             fontSize: '70px',
-            // fontStyle: 'bold',
             color: '#ffffff',
-            // align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            // fixedWidth: 0
         }
+
+        //adding play again text
         this.playAgain = this.add.text(game.config.width/2, game.config.height/2 + 20, 'Play Again', playConfig).setOrigin(0.5);
-        this.playAgain.setInteractive();
+        this.playAgain.setInteractive(); //set interactive to use mouse to click
 
-
+        //text configuration for citations
         let textConfig = {
             fontFamily: 'simpleKindOfGirl',
             fontSize: '21px',
-            // fontStyle: 'bold',
             color: '#ffffff',
             align: 'left',
             wordWrap: {
-                width: game.config.width - 40// maximum width of the text
+                width: game.config.width - 40
             },
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            // fixedWidth: 0
         }
 
+        //text configuration for citations subtitle
         let subTitleConfig = {
             fontFamily: 'bubbleBobble',
             fontSize: '28px',
-            // fontStyle: 'bold',
             color: '#999999',
             align: 'left',
             padding: {
@@ -100,42 +102,44 @@ class GameOver extends Phaser.Scene {
             fixedWidth: 200
         }
 
+        //adding text for credits subtitle
         this.add.text(20, game.config.height - 200, 'CREDITS:', subTitleConfig);
+
+        //adding text for list of credits
         this.add.text(20, game.config.height - 160, '• All artwork and code is created be me, Rebecca Zhao (i.e. the backgrounds, characters, items, bricks)', textConfig);
         this.add.text(20, game.config.height - 110, '• All music/sound effects downloaded from https://pixabay.com/sound-effects/search/sparkle/', textConfig);
         this.add.text(20, game.config.height - 85, '• All fonts downloaded from https://www.fontspace.com/search?q=bubble', textConfig);
         this.add.text(20, game.config.height - 60, '• Referenced code from professor', textConfig);
 
-
+        //play game over sound effect
         this.end = this.sound.add('ending');
         this.end.play();
-        this.clicked = false;
 
+        //boolean to make sure click sound effect is played once
+        this.clicked = false;
     }
 
     update() {
-
-
-        // this.scene.restart();
+        //if mouse is hovering play again text
         this.playAgain.on('pointerover', () => {
-            this.playAgain.setTint(0xbb95fc); 
+            this.playAgain.setTint(0xbb95fc); //set tint to pink
         });
         
-        // Set the tint color back to normal when the mouse leaves the button
+        //if mouse is not hovering play again
         this.playAgain.on('pointerout', () => {
-            this.playAgain.clearTint();
+            this.playAgain.clearTint(); //clear tint and sets back to white
         });
         
-        // Add a click event listener to the button
+        //if mouse clicked play again
         this.playAgain.on('pointerdown', () => {
-            // console.log('Button clicked!');
+            //check if sound effect hasn't been played yet
             if(!this.clicked){
-                this.sound.play('chimes');
-                this.clicked = true;
+                this.sound.play('chimes'); //play sound effect
+                this.clicked = true; //set clicked to true
             }
-            this.end.stop();
-            this.scene.start('playScene');
 
+            this.end.stop(); //stop game over sound effect if player leaves scene before sound ended
+            this.scene.start('playScene'); //start play scene again
         });
     }
 }

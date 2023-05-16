@@ -11,8 +11,11 @@ CREATIVE TILT:
     Visual: I drew out all the artwork from scratch and made each frame for the animations so I'm really proud of how they turned out.
 
 
-****** SIDE NOTE: For some reason, sometimes the up arrow key to jump is not being detected. If it isn't, I usually click away to some other tab 
-                    and then go back to the game. It should work as expected after that.
+    
+
+****** SIDE NOTE: Jump occasionally has trouble being detected at the beginning (not sure why because I followed the professor's examples). 
+                    Before starting the game, go to another tab and then switch back to the game to make sure it works/detects properly. 
+
 
 */
 
@@ -41,8 +44,6 @@ let config = {
 }
 
 let game = new Phaser.Game(config);
-
-// localStorage.setItem("score", 0);
 
 let centerX = game.config.width/2;
 let colors = ['yellow', 'purple', 'pink', 'green', 'orange', 'red', 'blue'];
